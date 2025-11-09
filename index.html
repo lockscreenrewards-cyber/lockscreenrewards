@@ -3,212 +3,330 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>lockscreenrewards – ألعاب مجانية</title>
-  <meta name="description" content="شبكة ألعاب HTML5 – العب مباشرة وكسب المتعة" />
-  <!-- Tailwind via CDN -->
+  <title>بوابة الألعاب | GameMonetize Feed</title>
+  <meta name="description" content="صفحة ألعاب احترافية تجلب الألعاب مباشرة من GameMonetize عبر Game Feed."/>
+  <!-- TailwindCSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* تحسينات بسيطة */
-    html,body{background:#0b0f14;color:#e6eef6}
-    ::-webkit-scrollbar{height:10px;width:10px}
-    ::-webkit-scrollbar-thumb{background:#1f2937;border-radius:8px}
-    .card{background:linear-gradient(180deg,#111827, #0b0f14);border:1px solid #1f2937}
-    .glass{backdrop-filter: blur(10px); background: rgba(17,24,39,0.55);}
+    /* تحسينات صغيرة */
+    .line-clamp-2 {display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .line-clamp-3 {display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+    .glass {backdrop-filter:saturate(180%) blur(10px); background-color: rgba(255,255,255,0.6)}
   </style>
 </head>
-<body class="min-h-screen">
+<body class="bg-slate-50 text-slate-900">
   <!-- Header -->
-  <header class="sticky top-0 z-50 glass border-b border-slate-700">
-    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center gap-3">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-cyan-500 to-indigo-500"></div>
-        <div>
-          <h1 class="text-xl font-bold">lockscreenrewards</h1>
-          <p class="text-xs text-slate-300">ألعاب HTML5 – شغّل فورًا</p>
-        </div>
+  <header class="sticky top-0 z-50 glass border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center gap-4">
+      <div class="shrink-0 w-10 h-10 rounded-2xl bg-gradient-to-br from-indigo-500 to-fuchsia-500"></div>
+      <div>
+        <h1 class="text-xl font-extrabold">بوابة الألعاب</h1>
+        <p class="text-sm text-slate-600">جلب مباشر من GameMonetize – قابل للتخصيص مع تصفية وبحث وتصفح صفحات.</p>
       </div>
-      <div class="ms-auto flex flex-wrap items-center gap-2">
-        <input id="q" type="search" placeholder="ابحث عن لعبة…" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 focus:outline-none focus:ring focus:ring-cyan-600 w-56" />
-        <select id="sort" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700">
-          <option value="newest">الأحدث</option>
-          <option value="popular">الأكثر شعبية</option>
-          <option value="az">أ-ي</option>
-        </select>
-        <button id="reload" class="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500">تحديث الألعاب</button>
+      <div class="ms-auto flex items-center gap-3">
+        <a class="text-xs text-slate-500 hover:text-slate-700 underline" href="https://gamemonetize.com" target="_blank" rel="noopener">GameMonetize</a>
       </div>
     </div>
   </header>
 
-  <!-- Hero -->
-  <section class="max-w-6xl mx-auto px-4 mt-6">
-    <div class="rounded-3xl card p-6 flex items-center justify-between gap-6">
-      <div>
-        <h2 class="text-2xl font-bold mb-2">اكتشف آلاف الألعاب</h2>
-        <p class="text-slate-300">اختر لعبة وابدأ اللعب مباشرة. جميع الأرباح تُحتسب لحسابك لأن التضمين يتم عبر GameMonetize والـ <code>ads.txt</code> على نطاقك.</p>
+  <!-- Controls -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 lg:p-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-end">
+        <div class="lg:col-span-4">
+          <label class="block text-sm font-medium mb-1">ابحث بالاسم</label>
+          <input id="q" type="text" placeholder="مثال: car, puzzle…" class="w-full rounded-xl border-slate-300 focus:border-indigo-500 focus:ring-indigo-500" />
+        </div>
+        <div class="lg:col-span-2">
+          <label class="block text-sm font-medium mb-1">التصنيف</label>
+          <select id="category" class="w-full rounded-xl border-slate-300 focus:border-indigo-500 focus:ring-indigo-500">
+            <option value="">الكل</option>
+            <option>.IO</option>
+            <option>2 Player</option>
+            <option>3D</option>
+            <option>Bejeweled</option>
+            <option>Boys</option>
+            <option>Clicker</option>
+            <option>Cooking</option>
+            <option>Girls</option>
+            <option>Multiplayer</option>
+            <option>Puzzle</option>
+            <option>Shooting</option>
+            <option>Racing</option>
+            <option>Soccer</option>
+            <option>Sports</option>
+            <option>Stickman</option>
+          </select>
+        </div>
+        <div class="lg:col-span-2">
+          <label class="block text-sm font-medium mb-1">المنصة</label>
+          <select id="platform" class="w-full rounded-xl border-slate-300 focus:border-indigo-500 focus:ring-indigo-500">
+            <option value="">الكل</option>
+            <option>WebGL</option>
+            <option>HTML5</option>
+            <option>Mobile</option>
+            <option>Desktop</option>
+          </select>
+        </div>
+        <div class="lg:col-span-2">
+          <label class="block text-sm font-medium mb-1">روابط خارجية</label>
+          <select id="links" class="w-full rounded-xl border-slate-300 focus:border-indigo-500 focus:ring-indigo-500">
+            <option value="0">لا</option>
+            <option value="1">نعم</option>
+          </select>
+        </div>
+        <div class="lg:col-span-2">
+          <label class="block text-sm font-medium mb-1">عدد الألعاب/صفحة</label>
+          <select id="perPage" class="w-full rounded-xl border-slate-300 focus:border-indigo-500 focus:ring-indigo-500">
+            <option>12</option>
+            <option>24</option>
+            <option>36</option>
+            <option>48</option>
+          </select>
+        </div>
+        <div class="lg:col-span-12 flex gap-3 pt-2">
+          <button id="apply" class="px-4 py-2 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-indigo-700 transition">تطبيق</button>
+          <button id="reset" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-800 font-semibold hover:bg-slate-200 transition">إعادة تعيين</button>
+          <div class="ms-auto text-xs text-slate-500 flex items-center gap-2">
+            <span>معلومة:</span>
+            <span>يمكنك نسخ رابط الـ Feed الناتج واستخدامه مباشرة.</span>
+          </div>
+        </div>
+        <div class="lg:col-span-12">
+          <label class="block text-sm font-medium mb-1">رابط الـ Feed المستخدم حاليًا</label>
+          <input id="feedUrl" type="text" readonly class="w-full rounded-xl border-slate-300 bg-slate-50" />
+        </div>
       </div>
-      <div class="hidden md:block w-40 h-24 rounded-2xl bg-gradient-to-br from-indigo-600 to-fuchsia-600"></div>
     </div>
   </section>
 
   <!-- Grid -->
-  <main class="max-w-6xl mx-auto px-4 py-6">
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+    <div id="status" class="hidden mb-4 p-3 rounded-xl bg-amber-50 text-amber-800 border border-amber-200 text-sm"></div>
+
     <div id="grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"></div>
 
-    <div class="mt-8 text-center">
-      <button id="loadMore" class="px-6 py-3 rounded-2xl bg-slate-800 border border-slate-700 hover:bg-slate-700">تحميل المزيد</button>
+    <!-- Pagination -->
+    <div class="flex justify-between items-center mt-6">
+      <button id="prev" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-800 border hover:bg-slate-200 disabled:opacity-40">السابق</button>
+      <div class="text-sm text-slate-600"><span id="pageLabel">صفحة 1</span></div>
+      <button id="next" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-800 border hover:bg-slate-200 disabled:opacity-40">التالي</button>
     </div>
   </main>
 
   <!-- Modal -->
-  <div id="modal" class="fixed inset-0 hidden items-center justify-center bg-black/70 p-4">
-    <div class="w-full max-w-5xl h-[80vh] card rounded-3xl overflow-hidden flex flex-col">
-      <div class="flex items-center justify-between p-3 border-b border-slate-700">
-        <h3 id="modalTitle" class="font-bold"></h3>
-        <div class="flex items-center gap-2">
-          <a id="openNew" href="#" target="_blank" rel="noopener" class="text-sm text-cyan-400 hover:underline">فتح في تبويب جديد</a>
-          <button id="closeModal" class="px-3 py-1 rounded-xl bg-slate-800 hover:bg-slate-700">إغلاق</button>
+  <div id="modal" class="fixed inset-0 hidden items-center justify-center bg-black/50 p-4">
+    <div class="bg-white rounded-2xl max-w-3xl w-full shadow-xl overflow-hidden">
+      <div class="flex items-center justify-between p-4 border-b">
+        <h3 id="modalTitle" class="text-lg font-bold"></h3>
+        <button id="modalClose" class="w-9 h-9 inline-flex items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200">×</button>
+      </div>
+      <div class="p-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <img id="modalThumb" class="w-full rounded-xl aspect-video object-cover" alt=""/>
+        <div class="lg:col-span-2 space-y-3">
+          <p id="modalDesc" class="text-sm text-slate-700"></p>
+          <p id="modalInstr" class="text-sm text-slate-600"></p>
+          <div class="flex flex-wrap gap-2" id="modalTags"></div>
+          <a id="modalPlay" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-indigo-700">العب الآن</a>
         </div>
       </div>
-      <iframe id="player" class="w-full flex-1" src="about:blank" frameborder="0" allowfullscreen></iframe>
     </div>
   </div>
 
-  <footer class="py-10 text-center text-xs text-slate-400">© <span id="y"></span> lockscreenrewards.site</footer>
-
   <script>
-    document.getElementById('y').textContent = new Date().getFullYear();
+    // ====== إعدادات أساسية ======
+    const BASE = 'https://gamemonetize.com/feed.php';
+    const USE_PROXY = false; // في حال واجهت CORS فعّل البروكسي واجعل المسار هو gm-feed-proxy.php
+    const PROXY_URL = '/gm-feed-proxy.php';
 
-    /**
-     * 1) ضع هنا رابط JSON feed الذي تولّده من صفحة GameMonetize RSS Builder
-     *    https://gamemonetize.com/rss-builder (اختر Format: JSON ثم GENERATE وانسخ الرابط)
-     *    مثال (وهمي): https://gamemonetize.com/rssfeed.json?format=json&type=HTML5&popularity=newest&items=100
-     */
-    const FEED_URL = 'https://gamemonetize.com/feed.php?format=0&num=50&page=1';
+    // ملاحظة: إن احتجت بروكسي، أنشئ ملف PHP بسيط بالمحتوى التالي:
+    /*
+    <?php // gm-feed-proxy.php
+      header('Content-Type: application/json; charset=UTF-8');
+      $qs = $_SERVER['QUERY_STRING'];
+      $url = 'https://gamemonetize.com/feed.php' . ($qs ? ('?' . $qs) : '');
+      $ch = curl_init($url);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      $out = curl_exec($ch);
+      $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+      curl_close($ch);
+      http_response_code($status ?: 200);
+      echo $out;
+    ?>
+    */
 
-    /**
-     * 2) خريطة مفاتيح مرنة لأن شكل JSON قد يختلف.
-     *    الكود يحاول قراءة العنوان، الصورة، رابط اللعبة، والمعرّف إن وُجد.
-     */
-    function toGame(item) {
-      const title = item.title || item.name || item.game_title || 'بدون عنوان';
-      const thumb = item.thumb || item.thumbnail || item.image || item.img || '';
-      const id    = item.id || item.game_id || item.GameId || null;
-      const url   = item.url || item.game_url || item.play_url || item.link || null;
-      return { title, thumb, id, url, raw: item };
+    // عناصر الواجهة
+    const el = (id) => document.getElementById(id);
+    const grid = el('grid');
+    const statusBox = el('status');
+    const feedInput = el('feedUrl');
+    const pageLabel = el('pageLabel');
+
+    const state = {
+      page: 1,
+      perPage: 12,
+      links: 0,
+      category: '',
+      platform: '',
+      q: ''
+    };
+
+    function buildUrl() {
+      const params = new URLSearchParams();
+      // format: 0 => JSON, 1 => XML
+      params.set('format', '0');
+      params.set('links', String(state.links));
+      params.set('page', String(state.page));
+      if (state.perPage) params.set('count', String(state.perPage));
+      if (state.category) params.set('category', state.category);
+      if (state.platform) params.set('platform', state.platform);
+      if (state.q) params.set('name', state.q);
+      const url = `${USE_PROXY ? PROXY_URL : BASE}?${params.toString()}`;
+      feedInput.value = url;
+      return url;
     }
 
-    // حاله بناء رابط التضمين بالـ iframe: إن وُجد id نستخدم مسار GameMonetize الرسمي
-    function buildEmbedUrl(game) {
-      if (game.id) return `https://gamemonetize.com/g/${game.id}`; // تضمين موثوق
-      if (game.url) return game.url; // fallback
-      return null;
+    function showStatus(msg, type='info') {
+      statusBox.textContent = msg;
+      statusBox.classList.remove('hidden');
+      statusBox.className = `mb-4 p-3 rounded-xl border text-sm ${type==='error' ? 'bg-rose-50 text-rose-800 border-rose-200' : 'bg-amber-50 text-amber-800 border-amber-200'}`;
     }
 
-    // الحالة والمخزن
-    const state = { all: [], filtered: [], page: 0, pageSize: 16 };
+    function hideStatus(){
+      statusBox.classList.add('hidden');
+    }
 
-    async function loadFeed() {
-      if (!FEED_URL || FEED_URL.includes('PUT_YOUR_JSON')) {
-        console.warn('ضع رابط JSON feed في المتغير FEED_URL');
-        return [];
+    function skeleton(n=8){
+      grid.innerHTML = Array.from({length:n}).map(()=>`
+        <div class="animate-pulse bg-white rounded-2xl border border-slate-200 overflow-hidden">
+          <div class="h-40 bg-slate-200"></div>
+          <div class="p-3 space-y-2">
+            <div class="h-4 bg-slate-200 rounded"></div>
+            <div class="h-4 bg-slate-100 rounded w-1/2"></div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function tagPill(t){
+      return `<span class="px-2 py-1 rounded-full text-xs bg-slate-100 border">${t}</span>`;
+    }
+
+    function renderGames(items){
+      if(!items || !items.length){
+        grid.innerHTML = `<div class='col-span-full text-center text-slate-600'>لا توجد نتائج مطابقة.</div>`;
+        return;
       }
-      const res = await fetch(FEED_URL);
-      if (!res.ok) throw new Error('فشل تحميل القائمة');
-      const data = await res.json();
-      // بعض الـ feeds ترجع قائمة مباشرة، والبعض { items: [...] }
-      const items = Array.isArray(data) ? data : (data.items || data.feed || data.games || []);
-      return items.map(toGame).filter(g => (g.thumb || g.url || g.id));
-    }
-
-    function renderBatch(reset=false) {
-      const grid = document.getElementById('grid');
-      if (reset) grid.innerHTML = '';
-      const start = state.page * state.pageSize;
-      const end = start + state.pageSize;
-      const chunk = state.filtered.slice(start, end);
-      chunk.forEach(game => {
-        const card = document.createElement('article');
-        card.className = 'card rounded-2xl overflow-hidden border border-slate-800 hover:border-cyan-600 transition';
-        card.innerHTML = `
-          <button class="w-full text-start" data-title="${escapeHtml(game.title)}" data-id="${game.id ?? ''}" data-url="${buildEmbedUrl(game) ?? ''}">
-            <div class="aspect-video bg-slate-900 overflow-hidden">
-              ${game.thumb ? `<img src="${game.thumb}" alt="${escapeHtml(game.title)}" class="w-full h-full object-cover" loading="lazy"/>` : ''}
+      grid.innerHTML = items.map(g=>{
+        const title = g.title || 'بدون اسم';
+        const img = g.thumb || g.image || '';
+        const cat = g.category || '';
+        const url = g.url || '#';
+        const desc = g.description || '';
+        return `
+        <article class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition">
+          <button class="group w-full text-start" data-game='${JSON.stringify(g).replace(/'/g,"&apos;")}'>
+            <div class="relative">
+              <img loading="lazy" src="${img}" alt="${title}" class="w-full aspect-video object-cover"/>
+              ${cat ? `<span class="absolute top-2 end-2 px-2 py-1 text-xs rounded-full bg-black/60 text-white">${cat}</span>` : ''}
             </div>
             <div class="p-3">
-              <h3 class="font-semibold line-clamp-1">${escapeHtml(game.title)}</h3>
+              <h3 class="font-bold text-sm line-clamp-2">${title}</h3>
+              ${desc ? `<p class="text-xs text-slate-600 mt-1 line-clamp-2">${desc}</p>` : ''}
             </div>
-          </button>`;
-        grid.appendChild(card);
+          </button>
+          <div class="px-3 pb-3 flex gap-2">
+            <a href="${url}" target="_blank" rel="noopener" class="flex-1 text-center px-3 py-2 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700">العب الآن</a>
+          </div>
+        </article>`;
+      }).join('');
+
+      // ربط النوافذ المنبثقة
+      grid.querySelectorAll('button[data-game]').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const data = JSON.parse(btn.getAttribute('data-game').replace(/&apos;/g, "'"));
+          openModal(data);
+        });
       });
-
-      state.page++;
-
-      document.getElementById('loadMore').classList.toggle('hidden', end >= state.filtered.length);
-
-      // wire up buttons
-      grid.querySelectorAll('button').forEach(btn => {
-        btn.onclick = () => openModal({ title: btn.dataset.title, url: btn.dataset.url });
-      });
     }
 
-    function escapeHtml(str){
-      return (str||'').replace(/[&<>"]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[s]));
+    function openModal(g){
+      el('modalTitle').textContent = g.title || '';
+      el('modalThumb').src = g.thumb || g.image || '';
+      el('modalDesc').textContent = g.description || '';
+      el('modalInstr').textContent = g.instructions ? `طريقة اللعب: ${g.instructions}` : '';
+      const tags = (g.tags||'').split(',').map(s=>s.trim()).filter(Boolean);
+      el('modalTags').innerHTML = tags.map(tagPill).join('');
+      el('modalPlay').href = g.url || '#';
+      el('modal').classList.remove('hidden');
+      el('modal').classList.add('flex');
     }
 
-    function openModal({ title, url }) {
-      const modal = document.getElementById('modal');
-      const player = document.getElementById('player');
-      const openNew = document.getElementById('openNew');
-      document.getElementById('modalTitle').textContent = title || '';
-      player.src = url;
-      openNew.href = url;
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-    }
+    el('modalClose').addEventListener('click', ()=>{
+      el('modal').classList.add('hidden');
+      el('modal').classList.remove('flex');
+    });
+    el('modal').addEventListener('click', (e)=>{
+      if(e.target.id === 'modal'){
+        el('modal').classList.add('hidden');
+        el('modal').classList.remove('flex');
+      }
+    });
 
-    function closeModal(){
-      const modal = document.getElementById('modal');
-      const player = document.getElementById('player');
-      player.src = 'about:blank';
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-    }
-
-    document.getElementById('closeModal').onclick = closeModal;
-    document.getElementById('modal').addEventListener('click', (e) => { if(e.target.id === 'modal') closeModal(); });
-
-    // بحث وترتيب
-    function applyFilters(){
-      const q = document.getElementById('q').value.trim().toLowerCase();
-      const sort = document.getElementById('sort').value;
-      let list = [...state.all];
-      if (q) list = list.filter(g => (g.title||'').toLowerCase().includes(q));
-      if (sort === 'az') list.sort((a,b)=> (a.title||'').localeCompare(b.title||''));
-      else if (sort === 'popular') list.sort((a,b)=> (b.raw?.plays||0) - (a.raw?.plays||0));
-      else /* newest */ list.sort((a,b)=> new Date(b.raw?.date || b.raw?.published || 0) - new Date(a.raw?.date || a.raw?.published || 0));
-      state.filtered = list;
-      state.page = 0;
-      renderBatch(true);
-    }
-
-    document.getElementById('q').addEventListener('input', ()=> {state.page=0; applyFilters();});
-    document.getElementById('sort').addEventListener('change', ()=> {state.page=0; applyFilters();});
-    document.getElementById('loadMore').addEventListener('click', ()=> renderBatch());
-    document.getElementById('reload').addEventListener('click', init);
-
-    async function init(){
+    async function fetchGames(){
+      hideStatus();
+      pageLabel.textContent = `صفحة ${state.page}`;
+      skeleton(state.perPage);
+      const url = buildUrl();
       try{
-        const items = await loadFeed();
-        state.all = items;
-        applyFilters();
+        const res = await fetch(url, {headers:{'Accept':'application/json'}});
+        if(!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json().catch(()=>null);
+        // هيكلة محتملة: { games: [...] } أو مصفوفة مباشرة
+        const items = Array.isArray(data) ? data : (data?.games || data?.result || data?.data || []);
+        renderGames(items);
       }catch(err){
         console.error(err);
-        const grid = document.getElementById('grid');
-        grid.innerHTML = `<div class="col-span-full text-center text-slate-300">تعذر تحميل الألعاب. تأكد من وضع رابط JSON الصحيح في <code>FEED_URL</code> ثم أعد المحاولة.</div>`;
+        showStatus('تعذّر جلب البيانات مباشرة (قد يكون بسبب سياسة CORS). فعّل البروكسي USE_PROXY أو استخدم ملف gm-feed-proxy.php على خادمك.', 'error');
+        grid.innerHTML = '';
       }
+      // أزرار الصفحات
+      el('prev').disabled = state.page <= 1;
+      el('next').disabled = false; // لا نعرف إجمالي الصفحات من الـ API، نُبقيه مفعّلًا حتى يتوقف عن إرجاع عناصر
     }
 
-    init();
+    // تهيئة عناصر التحكم
+    function initControls(){
+      el('apply').addEventListener('click', ()=>{
+        state.q = el('q').value.trim();
+        state.category = el('category').value;
+        state.platform = el('platform').value;
+        state.links = Number(el('links').value || 0);
+        state.perPage = Number(el('perPage').value || 12);
+        state.page = 1;
+        fetchGames();
+      });
+
+      el('reset').addEventListener('click', ()=>{
+        el('q').value = '';
+        el('category').value = '';
+        el('platform').value = '';
+        el('links').value = '0';
+        el('perPage').value = '12';
+        state.page = 1; state.q = ''; state.category=''; state.platform=''; state.links=0; state.perPage=12;
+        fetchGames();
+      });
+
+      el('prev').addEventListener('click', ()=>{ if(state.page>1){ state.page--; fetchGames(); }});
+      el('next').addEventListener('click', ()=>{ state.page++; fetchGames(); });
+
+      // ادخال سريع
+      el('q').addEventListener('keydown', (e)=>{ if(e.key==='Enter') el('apply').click(); });
+    }
+
+    // تشغيل أولي
+    initControls();
+    fetchGames();
   </script>
 </body>
 </html>
