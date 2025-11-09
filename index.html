@@ -1,24 +1,214 @@
-<!DOCTYPE html>
-<html lang="ar">
+<!doctype html>
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lockscreen Rewards</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>lockscreenrewards – ألعاب مجانية</title>
+  <meta name="description" content="شبكة ألعاب HTML5 – العب مباشرة وكسب المتعة" />
+  <!-- Tailwind via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background: #f8f9fa;
-      color: #333;
-      margin: 0;
-      padding: 50px;
-    }
-    h1 {
-      color: #007bff;
-    }
+    /* تحسينات بسيطة */
+    html,body{background:#0b0f14;color:#e6eef6}
+    ::-webkit-scrollbar{height:10px;width:10px}
+    ::-webkit-scrollbar-thumb{background:#1f2937;border-radius:8px}
+    .card{background:linear-gradient(180deg,#111827, #0b0f14);border:1px solid #1f2937}
+    .glass{backdrop-filter: blur(10px); background: rgba(17,24,39,0.55);}
   </style>
 </head>
-<body>
-  <h1> Welcome To Lockscreen Rewards 🎉</h1>
+<body class="min-h-screen">
+  <!-- Header -->
+  <header class="sticky top-0 z-50 glass border-b border-slate-700">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-cyan-500 to-indigo-500"></div>
+        <div>
+          <h1 class="text-xl font-bold">lockscreenrewards</h1>
+          <p class="text-xs text-slate-300">ألعاب HTML5 – شغّل فورًا</p>
+        </div>
+      </div>
+      <div class="ms-auto flex flex-wrap items-center gap-2">
+        <input id="q" type="search" placeholder="ابحث عن لعبة…" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 focus:outline-none focus:ring focus:ring-cyan-600 w-56" />
+        <select id="sort" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700">
+          <option value="newest">الأحدث</option>
+          <option value="popular">الأكثر شعبية</option>
+          <option value="az">أ-ي</option>
+        </select>
+        <button id="reload" class="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500">تحديث الألعاب</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="max-w-6xl mx-auto px-4 mt-6">
+    <div class="rounded-3xl card p-6 flex items-center justify-between gap-6">
+      <div>
+        <h2 class="text-2xl font-bold mb-2">اكتشف آلاف الألعاب</h2>
+        <p class="text-slate-300">اختر لعبة وابدأ اللعب مباشرة. جميع الأرباح تُحتسب لحسابك لأن التضمين يتم عبر GameMonetize والـ <code>ads.txt</code> على نطاقك.</p>
+      </div>
+      <div class="hidden md:block w-40 h-24 rounded-2xl bg-gradient-to-br from-indigo-600 to-fuchsia-600"></div>
+    </div>
+  </section>
+
+  <!-- Grid -->
+  <main class="max-w-6xl mx-auto px-4 py-6">
+    <div id="grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+
+    <div class="mt-8 text-center">
+      <button id="loadMore" class="px-6 py-3 rounded-2xl bg-slate-800 border border-slate-700 hover:bg-slate-700">تحميل المزيد</button>
+    </div>
+  </main>
+
+  <!-- Modal -->
+  <div id="modal" class="fixed inset-0 hidden items-center justify-center bg-black/70 p-4">
+    <div class="w-full max-w-5xl h-[80vh] card rounded-3xl overflow-hidden flex flex-col">
+      <div class="flex items-center justify-between p-3 border-b border-slate-700">
+        <h3 id="modalTitle" class="font-bold"></h3>
+        <div class="flex items-center gap-2">
+          <a id="openNew" href="#" target="_blank" rel="noopener" class="text-sm text-cyan-400 hover:underline">فتح في تبويب جديد</a>
+          <button id="closeModal" class="px-3 py-1 rounded-xl bg-slate-800 hover:bg-slate-700">إغلاق</button>
+        </div>
+      </div>
+      <iframe id="player" class="w-full flex-1" src="about:blank" frameborder="0" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <footer class="py-10 text-center text-xs text-slate-400">© <span id="y"></span> lockscreenrewards.site</footer>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    /**
+     * 1) ضع هنا رابط JSON feed الذي تولّده من صفحة GameMonetize RSS Builder
+     *    https://gamemonetize.com/rss-builder (اختر Format: JSON ثم GENERATE وانسخ الرابط)
+     *    مثال (وهمي): https://gamemonetize.com/rssfeed.json?format=json&type=HTML5&popularity=newest&items=100
+     */
+    const FEED_URL = 'https://gamemonetize.com/feed.php?format=0&num=50&page=1';
+
+    /**
+     * 2) خريطة مفاتيح مرنة لأن شكل JSON قد يختلف.
+     *    الكود يحاول قراءة العنوان، الصورة، رابط اللعبة، والمعرّف إن وُجد.
+     */
+    function toGame(item) {
+      const title = item.title || item.name || item.game_title || 'بدون عنوان';
+      const thumb = item.thumb || item.thumbnail || item.image || item.img || '';
+      const id    = item.id || item.game_id || item.GameId || null;
+      const url   = item.url || item.game_url || item.play_url || item.link || null;
+      return { title, thumb, id, url, raw: item };
+    }
+
+    // حاله بناء رابط التضمين بالـ iframe: إن وُجد id نستخدم مسار GameMonetize الرسمي
+    function buildEmbedUrl(game) {
+      if (game.id) return `https://gamemonetize.com/g/${game.id}`; // تضمين موثوق
+      if (game.url) return game.url; // fallback
+      return null;
+    }
+
+    // الحالة والمخزن
+    const state = { all: [], filtered: [], page: 0, pageSize: 16 };
+
+    async function loadFeed() {
+      if (!FEED_URL || FEED_URL.includes('PUT_YOUR_JSON')) {
+        console.warn('ضع رابط JSON feed في المتغير FEED_URL');
+        return [];
+      }
+      const res = await fetch(FEED_URL);
+      if (!res.ok) throw new Error('فشل تحميل القائمة');
+      const data = await res.json();
+      // بعض الـ feeds ترجع قائمة مباشرة، والبعض { items: [...] }
+      const items = Array.isArray(data) ? data : (data.items || data.feed || data.games || []);
+      return items.map(toGame).filter(g => (g.thumb || g.url || g.id));
+    }
+
+    function renderBatch(reset=false) {
+      const grid = document.getElementById('grid');
+      if (reset) grid.innerHTML = '';
+      const start = state.page * state.pageSize;
+      const end = start + state.pageSize;
+      const chunk = state.filtered.slice(start, end);
+      chunk.forEach(game => {
+        const card = document.createElement('article');
+        card.className = 'card rounded-2xl overflow-hidden border border-slate-800 hover:border-cyan-600 transition';
+        card.innerHTML = `
+          <button class="w-full text-start" data-title="${escapeHtml(game.title)}" data-id="${game.id ?? ''}" data-url="${buildEmbedUrl(game) ?? ''}">
+            <div class="aspect-video bg-slate-900 overflow-hidden">
+              ${game.thumb ? `<img src="${game.thumb}" alt="${escapeHtml(game.title)}" class="w-full h-full object-cover" loading="lazy"/>` : ''}
+            </div>
+            <div class="p-3">
+              <h3 class="font-semibold line-clamp-1">${escapeHtml(game.title)}</h3>
+            </div>
+          </button>`;
+        grid.appendChild(card);
+      });
+
+      state.page++;
+
+      document.getElementById('loadMore').classList.toggle('hidden', end >= state.filtered.length);
+
+      // wire up buttons
+      grid.querySelectorAll('button').forEach(btn => {
+        btn.onclick = () => openModal({ title: btn.dataset.title, url: btn.dataset.url });
+      });
+    }
+
+    function escapeHtml(str){
+      return (str||'').replace(/[&<>"]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[s]));
+    }
+
+    function openModal({ title, url }) {
+      const modal = document.getElementById('modal');
+      const player = document.getElementById('player');
+      const openNew = document.getElementById('openNew');
+      document.getElementById('modalTitle').textContent = title || '';
+      player.src = url;
+      openNew.href = url;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeModal(){
+      const modal = document.getElementById('modal');
+      const player = document.getElementById('player');
+      player.src = 'about:blank';
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    document.getElementById('closeModal').onclick = closeModal;
+    document.getElementById('modal').addEventListener('click', (e) => { if(e.target.id === 'modal') closeModal(); });
+
+    // بحث وترتيب
+    function applyFilters(){
+      const q = document.getElementById('q').value.trim().toLowerCase();
+      const sort = document.getElementById('sort').value;
+      let list = [...state.all];
+      if (q) list = list.filter(g => (g.title||'').toLowerCase().includes(q));
+      if (sort === 'az') list.sort((a,b)=> (a.title||'').localeCompare(b.title||''));
+      else if (sort === 'popular') list.sort((a,b)=> (b.raw?.plays||0) - (a.raw?.plays||0));
+      else /* newest */ list.sort((a,b)=> new Date(b.raw?.date || b.raw?.published || 0) - new Date(a.raw?.date || a.raw?.published || 0));
+      state.filtered = list;
+      state.page = 0;
+      renderBatch(true);
+    }
+
+    document.getElementById('q').addEventListener('input', ()=> {state.page=0; applyFilters();});
+    document.getElementById('sort').addEventListener('change', ()=> {state.page=0; applyFilters();});
+    document.getElementById('loadMore').addEventListener('click', ()=> renderBatch());
+    document.getElementById('reload').addEventListener('click', init);
+
+    async function init(){
+      try{
+        const items = await loadFeed();
+        state.all = items;
+        applyFilters();
+      }catch(err){
+        console.error(err);
+        const grid = document.getElementById('grid');
+        grid.innerHTML = `<div class="col-span-full text-center text-slate-300">تعذر تحميل الألعاب. تأكد من وضع رابط JSON الصحيح في <code>FEED_URL</code> ثم أعد المحاولة.</div>`;
+      }
+    }
+
+    init();
+  </script>
 </body>
 </html>
