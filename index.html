@@ -3,12 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>بوابة الألعاب | GameMonetize Feed</title>
-  <meta name="description" content="صفحة ألعاب احترافية تجلب الألعاب مباشرة من GameMonetize عبر Game Feed."/>
+  <title>Lock Screeen Rewards Games</title>
   <!-- TailwindCSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* تحسينات صغيرة */
+    /*Game Category: */
     .line-clamp-2 {display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
     .line-clamp-3 {display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
     .glass {backdrop-filter:saturate(180%) blur(10px); background-color: rgba(255,255,255,0.6)}
@@ -21,10 +20,8 @@
       <div class="shrink-0 w-10 h-10 rounded-2xl bg-gradient-to-br from-indigo-500 to-fuchsia-500"></div>
       <div>
         <h1 class="text-xl font-extrabold">بوابة الألعاب</h1>
-        <p class="text-sm text-slate-600">جلب مباشر من GameMonetize – قابل للتخصيص مع تصفية وبحث وتصفح صفحات.</p>
       </div>
       <div class="ms-auto flex items-center gap-3">
-        <a class="text-xs text-slate-500 hover:text-slate-700 underline" href="https://gamemonetize.com" target="_blank" rel="noopener">GameMonetize</a>
       </div>
     </div>
   </header>
@@ -34,13 +31,13 @@
     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 lg:p-6">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-end">
         <div class="lg:col-span-4">
-          <label class="block text-sm font-medium mb-1">ابحث بالاسم</label>
+          <label class="block text-sm font-medium mb-1">Game Name Contains (Optional):</label>
           <input id="q" type="text" placeholder="مثال: car, puzzle…" class="w-full rounded-xl border-slate-300 focus:border-indigo-500 focus:ring-indigo-500" />
         </div>
         <div class="lg:col-span-2">
-          <label class="block text-sm font-medium mb-1">التصنيف</label>
+          <label class="block text-sm font-medium mb-1">Company:</label>
           <select id="category" class="w-full rounded-xl border-slate-300 focus:border-indigo-500 focus:ring-indigo-500">
-            <option value="">الكل</option>
+            <option value="">All</option>
             <option>.IO</option>
             <option>2 Player</option>
             <option>3D</option>
@@ -59,9 +56,9 @@
           </select>
         </div>
         <div class="lg:col-span-2">
-          <label class="block text-sm font-medium mb-1">المنصة</label>
+          <label class="block text-sm font-medium mb-1">Platform:</label>
           <select id="platform" class="w-full rounded-xl border-slate-300 focus:border-indigo-500 focus:ring-indigo-500">
-            <option value="">الكل</option>
+            <option value="">All</option>
             <option>WebGL</option>
             <option>HTML5</option>
             <option>Mobile</option>
@@ -69,14 +66,14 @@
           </select>
         </div>
         <div class="lg:col-span-2">
-          <label class="block text-sm font-medium mb-1">روابط خارجية</label>
+          <label class="block text-sm font-medium mb-1">Contain Links :</label>
           <select id="links" class="w-full rounded-xl border-slate-300 focus:border-indigo-500 focus:ring-indigo-500">
-            <option value="0">لا</option>
-            <option value="1">نعم</option>
+            <option value="0">Non</option>
+            <option value="1">Oui</option>
           </select>
         </div>
         <div class="lg:col-span-2">
-          <label class="block text-sm font-medium mb-1">عدد الألعاب/صفحة</label>
+          <label class="block text-sm font-medium mb-1">How Many Games Per Page:</label>
           <select id="perPage" class="w-full rounded-xl border-slate-300 focus:border-indigo-500 focus:ring-indigo-500">
             <option>12</option>
             <option>24</option>
@@ -85,15 +82,11 @@
           </select>
         </div>
         <div class="lg:col-span-12 flex gap-3 pt-2">
-          <button id="apply" class="px-4 py-2 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-indigo-700 transition">تطبيق</button>
-          <button id="reset" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-800 font-semibold hover:bg-slate-200 transition">إعادة تعيين</button>
+          <button id="apply" class="px-4 py-2 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-indigo-700 transition">Save</button>
           <div class="ms-auto text-xs text-slate-500 flex items-center gap-2">
-            <span>معلومة:</span>
-            <span>يمكنك نسخ رابط الـ Feed الناتج واستخدامه مباشرة.</span>
           </div>
         </div>
         <div class="lg:col-span-12">
-          <label class="block text-sm font-medium mb-1">رابط الـ Feed المستخدم حاليًا</label>
           <input id="feedUrl" type="text" readonly class="w-full rounded-xl border-slate-300 bg-slate-50" />
         </div>
       </div>
@@ -108,9 +101,9 @@
 
     <!-- Pagination -->
     <div class="flex justify-between items-center mt-6">
-      <button id="prev" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-800 border hover:bg-slate-200 disabled:opacity-40">السابق</button>
+      <button id="prev" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-800 border hover:bg-slate-200 disabled:opacity-40">Previous</button>
       <div class="text-sm text-slate-600"><span id="pageLabel">صفحة 1</span></div>
-      <button id="next" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-800 border hover:bg-slate-200 disabled:opacity-40">التالي</button>
+      <button id="next" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-800 border hover:bg-slate-200 disabled:opacity-40">Next</button>
     </div>
   </main>
 
@@ -127,7 +120,7 @@
           <p id="modalDesc" class="text-sm text-slate-700"></p>
           <p id="modalInstr" class="text-sm text-slate-600"></p>
           <div class="flex flex-wrap gap-2" id="modalTags"></div>
-          <a id="modalPlay" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-indigo-700">العب الآن</a>
+          <a id="modalPlay" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-indigo-700">اPlay Nox</a>
         </div>
       </div>
     </div>
