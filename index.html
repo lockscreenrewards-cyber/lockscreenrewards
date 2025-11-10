@@ -207,7 +207,7 @@
 
     function renderGames(items){
       if(!items || !items.length){
-        grid.innerHTML = `<div class='col-span-full text-center text-slate-600'>لا توجد نتائج مطابقة.</div>`;
+        grid.innerHTML = `<div class='col-span-full text-center text-slate-600'>No matching results found.</div>`;
         return;
       }
       grid.innerHTML = items.map(g=>{
@@ -229,7 +229,7 @@
             </div>
           </button>
           <div class="px-3 pb-3 flex gap-2">
-            <a href="${url}" target="_blank" rel="noopener" class="flex-1 text-center px-3 py-2 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700">Play Nox</a>
+            <a href="${url}" target="_blank" rel="noopener" class="flex-1 text-center px-3 py-2 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700">Play Now</a>
           </div>
         </article>`;
       }).join('');
